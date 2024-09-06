@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "sparqlwrapper-mock-draft"
+version = "0.1.0"
+description = ""
+authors = ["Lukas Plank <lupl@tuta.io>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+rdflib = "^7.0.0"
+sparqlwrapper = "^2.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
