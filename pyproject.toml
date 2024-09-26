@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.12"
 rdflib = "^7.0.0"
 sparqlwrapper = "^2.0.0"
+pydantic = "^2.9.2"
 
 
 [build-system]
