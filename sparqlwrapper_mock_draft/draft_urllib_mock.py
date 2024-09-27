@@ -1,17 +1,17 @@
 """Playground for mocking urllib instead of SPARQLWrapper."""
 
 from contextlib import contextmanager
+from typing import cast
 from unittest.mock import MagicMock, patch
 
 from SPARQLWrapper import Wrapper
 from SPARQLWrapper import SPARQLWrapper
 from rdflib import Graph
 from rdflib.plugins.sparql.processor import SPARQLResult
-
 from sparqlwrapper_mock_draft.utils.utils import (
+    get_format_from_url,
     get_query_from_url,
-    sparql_result_to_json_payload,
-    update_query_p,
+    is_update_query,
 )
 
 
@@ -37,7 +37,7 @@ graph = Graph().parse(data=data, format="ttl")
 
 
 def code_under_test():
-    s = SPARQLWrapper("https://some.endpoint")
+    s = SPARQLWrapper("https://some.inexistent.endpoint")
     s.setQuery("select * where {?s ?p ?o .}")
 
     result = s.query()
@@ -52,13 +52,14 @@ def sparqlwrapper_graph_target(graph: Graph):
         def mock_side_effect():
             """Extract a query from a URL, run it against a local rdflib.Graph instance and return a response JSON payload."""
             _url: str = mock_open.call_args[0][0].full_url
-            query: str = get_query_from_url(_url)
+            query: str = cast(str, get_query_from_url(_url))
+            _format: str = cast(str, get_format_from_url(_url))
 
-            graph_query_method: str = "update" if update_query_p(query) else "query"
+            graph_query_method: str = "update" if is_update_query(query) else "query"
             sparql_result: SPARQLResult = getattr(graph, graph_query_method)(query)
 
-            json_payload = sparql_result_to_json_payload(sparql_result=sparql_result)
-            return json_payload
+            payload = sparql_result.serialize(format=_format)
+            return payload
 
         mock_response.read.side_effect = mock_side_effect
         mock_open.return_value = mock_response
