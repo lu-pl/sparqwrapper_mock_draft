@@ -27,7 +27,7 @@ def code_under_test():
     return result
 
 
-with sparqlwrapper_graph_target(graph):
+with SPARQLWrapperLocalTarget(graph) as graph:
     result = code_under_test() 
 ```
 

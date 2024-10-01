@@ -15,7 +15,7 @@ from sparqlwrapper_mock_draft.utils.utils import (
 
 
 @contextmanager
-def sparqlwrapper_graph_target(graph: Graph):
+def SPARQLWrapperLocalTarget(graph: Graph):
     """Context for mocking SPARQLWrapper by routing queries to a local rdflib.Graph."""
 
     with patch.object(Wrapper, "urlopener") as mock_open:

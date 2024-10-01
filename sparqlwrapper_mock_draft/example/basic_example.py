@@ -2,7 +2,7 @@
 
 from SPARQLWrapper import SPARQLWrapper
 from rdflib import Graph
-from sparqlwrapper_mock_draft.draft_urllib_mock import sparqlwrapper_graph_target
+from sparqlwrapper_mock_draft.draft_urllib_mock import SPARQLWrapperLocalTarget
 
 data = """
 BASE <http://example.org/>
@@ -33,7 +33,7 @@ def code_under_test():
     return result
 
 
-with sparqlwrapper_graph_target(graph):
+with SPARQLWrapperLocalTarget(graph) as graph:
     result = code_under_test()
     print("INFO: ", result)
     print()
