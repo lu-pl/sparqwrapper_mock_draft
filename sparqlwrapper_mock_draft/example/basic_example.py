@@ -2,7 +2,7 @@
 
 from SPARQLWrapper import SPARQLWrapper
 from rdflib import Graph
-from sparqlwrapper_mock_draft.draft_urllib_mock import SPARQLWrapperLocalTarget
+from sparqlwrapper_mock_draft.latest import SPARQLWrapperLocalTarget
 
 data = """
 BASE <http://example.org/>
@@ -24,17 +24,9 @@ PREFIX rel: <http://www.perceive.net/schemas/relationship/>
 
 graph = Graph().parse(data=data, format="ttl")
 
-
-def code_under_test():
-    s = SPARQLWrapper("https://some.inexistent.endpoint")
+with SPARQLWrapperLocalTarget(graph):
+    s = SPARQLWrapper("some.endpoint")
+    s.setReturnFormat("json")
     s.setQuery("select * where {?s ?p ?o .}")
 
-    result = s.query()
-    return result
-
-
-with SPARQLWrapperLocalTarget(graph) as graph:
-    result = code_under_test()
-    print("INFO: ", result)
-    print()
-    print("INFO: ", result.convert())
+    print(s.queryAndConvert())
