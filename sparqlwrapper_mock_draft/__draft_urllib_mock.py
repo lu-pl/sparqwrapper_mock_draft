@@ -4,12 +4,11 @@ from contextlib import contextmanager
 from typing import cast
 from unittest.mock import MagicMock, patch
 
-from SPARQLWrapper import Wrapper
+from SPARQLWrapper import SPARQLWrapper, Wrapper
 from rdflib import Graph
 from rdflib.plugins.sparql.processor import SPARQLResult
 from sparqlwrapper_mock_draft.utils.utils import (
-    get_format_from_url,
-    get_query_from_url,
+    _get_query_from_request_data,
     is_update_query,
 )
 
@@ -28,6 +27,8 @@ def SPARQLWrapperLocalTarget(graph: Graph):
             and return the applicable payload.
             """
             _url: str = mock_open.call_args[0][0].full_url
+            _data: bytes = mock_open.call_args[0][0].data
+
             query: str = cast(str, get_query_from_url(_url))
             _format: str = cast(str, get_format_from_url(_url))
 
